@@ -1,10 +1,12 @@
+/* Class holds information of each player in the game for each user
+*/
 import java.util.*;
 
 public class Player
 {
 	private Account account;
 	private int acct;
-	public Player()
+	public Player() // constructor asks user to enter account number and creates an initial balance of a new account
 	{
 		Scanner input = new Scanner(System.in);
 		boolean contIn = true;
@@ -44,23 +46,23 @@ public class Player
 		}
 		account = new Account(acct, amount);
 	}
-	public void bet(double amt)
+	public void bet(double amt) // method places a bet on the balance by withdrawing the given amount 
 	{
 		this.account.withdraw(amt);
 	}
-	public void win(double amt)
+	public void win(double amt) // method deposits the given amount when a player wins
 	{
 		this.account.deposit(amt);
 	}
-	public double getBalance()
+	public double getBalance() // method returns balance of the player's account
 	{
 		return this.account.getBalance();
 	}
-	public static void print(String str)
+	public static void print(String str) // method creates a shorter version of System.out.print() for purpose of writing the program
 	{
 		System.out.print(str);
 	}
-	public static void println(String str)
+	public static void println(String str) // method creates a shorter version of System.out.println() for purpose of writing the program
 	{
 		System.out.println(str);
 	}
