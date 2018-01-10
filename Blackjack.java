@@ -1,12 +1,14 @@
-
+/* Class simulates a game of Black Jack between the computer and the user
+* The computer acts as the dealer
+*/
 import java.util.*;
 public class Blackjack 
 {
-	static int playerTotal;
-	static int dealerTotal;
-	static ArrayList<Integer> allCards;
-	static ArrayList<Card> dealerCards;
-	static ArrayList<Card> playerCards;
+	static int playerTotal; // variable holds the total value of the player's hand(s)
+	static int dealerTotal; // variable holds the total value of the dealer's hand
+	static ArrayList<Integer> allCards; // Array list holds all cards that has been dealt in the game
+	static ArrayList<Card> dealerCards; // Array list holds the dealer's cards
+	static ArrayList<Card> playerCards; // Array list holds the player's cards
 	static Player player;
 	public static void main(String[] args)
 	{
@@ -21,7 +23,7 @@ public class Blackjack
 				boolean contIn = true;
 				while(contIn)
 				{
-					try
+					try // try catch clause prevents non-numerical or non-positive inputs
 					{
 						print("Enter the amount you want to bet: ");
 						bet = input.nextDouble();
@@ -41,10 +43,10 @@ public class Blackjack
 					}
 				}
 				player.bet(bet);
-				playerCards = new ArrayList<Card>(); // The player's hands
-				dealerCards = new ArrayList<Card>(); // Dealer's hand
-				allCards = new ArrayList<Integer>(); // Keep track of all cards in play
-				for(int i = 0; i < 4; i++) //Draw 
+				playerCards = new ArrayList<Card>(); // holds the player's hands
+				dealerCards = new ArrayList<Card>(); // holds the dealer's hand
+				allCards = new ArrayList<Integer>(); // keeps track of all cards in play
+				for(int i = 0; i < 4; i++) // loop draw first cards 
 				{
 					drawCard();
 					if(i<2) //Draw 2 cards for the player
@@ -58,8 +60,8 @@ public class Blackjack
 				println("You have the " + playerCards.get(0) + " and the " + playerCards.get(1));
 				println("Your total is " + playerTotal);
 				println("Dealer has the " + dealerCards.get(0));
-				String reply = "stand";
-				if(playerTotal < 21)
+				String reply = "stand"; 
+				if(playerTotal < 21) 
 				{
 					println("Would you like to Hit, Stand, or Split? ");
 					reply = input.nextLine().toLowerCase();
@@ -182,7 +184,8 @@ public class Blackjack
 		}while(contPlay);
 		input.close();
 	}
-	public static void checkAccount()
+	public static void checkAccount() /* method asks the player if he/she wants to deposit more money, deposits the amount the user input,
+	or terminates the game depending on the player's choice*/
 	{
 		Scanner input = new Scanner(System.in);
 		println("Not enough money in your account. Deposit more? (yes/no)");
@@ -232,7 +235,7 @@ public class Blackjack
 			}
 		}
 	}
-	public static void drawCard() // Draw another card
+	public static void drawCard() // method draws another card into a hand (arraylist)
 	{
 		boolean cont = true;
 		while(cont)
@@ -245,7 +248,7 @@ public class Blackjack
 			}
 		}
 	}
-	public static int calculateTotal(ArrayList<Card> list)
+	public static int calculateTotal(ArrayList<Card> list) // method returns the total value of a hand (arraylist)
 	{
 		int total = 0;
 		for(int i = 0; i < list.size(); i++)
@@ -260,7 +263,8 @@ public class Blackjack
 		}
 		return total;
 	}
-	public static String playerHit(ArrayList<Card> cards)
+	public static String playerHit(ArrayList<Card> cards) /* method adds a card to player's hand, removes the drawn card from the deck of cards 
+	calculates total to verify the total value of the player's hand and reinitiates "hit or stand" of the total is less than 21*/
 	{
 		Scanner input = new Scanner(System.in);
 		String reply = "";
@@ -291,8 +295,8 @@ public class Blackjack
 		}
 		return reply;
 	}
-	public static int split(int i)
-	{
+	public static int split(int i) { /* method draws another card into each hand, calculates the total, prints the total of each to the player,
+	and asks the player if he/she would like to draw again into each hand*/
 		Scanner input = new Scanner(System.in);
 		ArrayList<Card> hand = new ArrayList<Card>();
 		hand.add(playerCards.get(i));
@@ -314,7 +318,8 @@ public class Blackjack
 		}
 		return calculateTotal(hand);
 	}
-	public static void dealer()
+	
+	public static void dealer() // method determines and displays what cards the dealer's hand holds and calculates its total
 	{
 		while(dealerTotal <= 14)
 		{
