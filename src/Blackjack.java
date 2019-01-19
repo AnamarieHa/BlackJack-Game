@@ -18,31 +18,31 @@ public class Blackjack
 		do{
 			double bet = 0;
 			double winnings = 0;
-			if(player.getBalance() > 0)
-			{
+//			if (player.getBalance() > 0)
+//			{
 				boolean contIn = true;
-				while(contIn)
-				{
-					try // try catch clause prevents non-numerical or non-positive inputs
-					{
-						print("Enter the amount you want to bet: ");
-						bet = input.nextDouble();
-						if(bet <= 0) // Prevent non-positive numbers
-							println("You must bet something.");
-						else if(bet > player.getBalance())
-						{
-							checkAccount();
-						}
-						else
-							contIn = false;
-					}
-					catch(InputMismatchException ex) //Prevent non-numerical inputs
-					{
-						println("Enter a valid amount.");
-						input.next();
-					}
-				}
-				player.bet(bet);
+//				while(contIn)
+//				{
+//					try // try catch clause prevents non-numerical or non-positive inputs
+//					{
+//						print("Enter the amount you want to bet: ");
+//						bet = input.nextDouble();
+//						if(bet <= 0) // Prevent non-positive numbers
+//							println("You must bet something.");
+//						else if(bet > player.getBalance())
+//						{
+//							player.askDeposit();
+//						}
+//						else
+//							contIn = false;
+//					}
+//					catch(InputMismatchException ex) //Prevent non-numerical inputs
+//					{
+//						println("Enter a valid amount.");
+//						input.next();
+//					}
+//				}
+				contPlay = player.bet(bet);
 				playerCards = new ArrayList<Card>(); // holds the player's hands
 				dealerCards = new ArrayList<Card>(); // holds the dealer's hand
 				allCards = new ArrayList<Integer>(); // keeps track of all cards in play
@@ -171,70 +171,94 @@ public class Blackjack
 						answer = input.nextLine().toLowerCase();
 					}
 				}
-			}	
-			else
-			{
-				checkAccount();
-				if(player.getBalance() == 0)
-				{
-					println("You have no money. Game over.");
-					contPlay = false;
-				}
-			}
-		}while(contPlay);
+			}	while(contPlay);
+//			else
+//			{
+//				player.askDeposit();
+//				if(player.getBalance() == 0)
+//				{
+//					println("You have no money. Game over.");
+//					contPlay = false;
+//				}
+//			}
+		//} while(contPlay);
 		input.close();
 	}
-	public static void checkAccount() /* method asks the player if he/she wants to deposit more money, deposits the amount the user input,
-	or terminates the game depending on the player's choice*/
-	{
-		Scanner input = new Scanner(System.in);
-		println("Not enough money in your account. Deposit more? (yes/no)");
-		String ans = "";
-		boolean accountCheck = true;
-		while(accountCheck)
-		{
-			println("Please enter Yes or No: ");
-			ans = input.nextLine();
-			ans = ans.toLowerCase();
-			if(ans.equals("yes"))
-			{
-				accountCheck = false;
-			}
-			else if(ans.equals("no"))
-			{
-				accountCheck = false;
-			}
-		}
-		accountCheck = true;
-		while(accountCheck)
-		{
-			try {
-				
-				if(ans.equals("yes"))
-				{
-					println("Deposit how much?");
-					double amount = input.nextDouble();
-					while(amount <= 0) {
-						println("You must deposit something.");
-						amount = input.nextDouble();
-					}
-					player.win(amount);
-					accountCheck = false;
-				}
-				else if(ans.equals("no"))
-				{
-					print("OK. ");
-					accountCheck = false;
-				}
-				
-			}
-			catch(InputMismatchException ex)
-			{
-				println("Enter a valid amount");
-				input.nextLine();
-			}
-		}
-	}
+//	public static double checkBet() {
+//		boolean contIn = true;
+//		while(contIn)
+//		{
+//			try // try catch clause prevents non-numerical or non-positive inputs
+//			{
+//				print("Enter the amount you want to bet: ");
+//				bet = input.nextDouble();
+//				if(bet <= 0) // Prevent non-positive numbers
+//					println("You must bet something.");
+//				else if(bet > player.getBalance())
+//				{
+//					checkAccount();
+//				}
+//				else
+//					contIn = false;
+//			}
+//			catch(InputMismatchException ex) //Prevent non-numerical inputs
+//			{
+//				println("Enter a valid amount.");
+//				input.next();
+//			}
+//		}
+//	}
+//	public static void askDeposit() /* method asks the player if he/she wants to deposit more money, deposits the amount the user input,
+//	or terminates the game depending on the player's choice*/
+//	{
+//		Scanner input = new Scanner(System.in);
+//		println("Not enough money in your account. Deposit more? (yes/no)");
+//		String ans = "";
+//		boolean accountCheck = true;
+//		while(accountCheck)
+//		{
+//			println("Please enter Yes or No: ");
+//			ans = input.nextLine();
+//			ans = ans.toLowerCase();
+//			if(ans.equals("yes"))
+//			{
+//				accountCheck = false;
+//			}
+//			else if(ans.equals("no"))
+//			{
+//				accountCheck = false;
+//			}
+//		}
+//		accountCheck = true;
+//		while(accountCheck)
+//		{
+//			try {
+//				
+//				if(ans.equals("yes"))
+//				{
+//					println("Deposit how much?");
+//					double amount = input.nextDouble();
+//					while(amount <= 0) {
+//						println("You must deposit something.");
+//						amount = input.nextDouble();
+//					}
+//					player.win(amount);
+//					accountCheck = false;
+//				}
+//				else if(ans.equals("no"))
+//				{
+//					print("OK. ");
+//					accountCheck = false;
+//				}
+//				
+//			}
+//			catch(InputMismatchException ex)
+//			{
+//				println("Enter a valid amount");
+//				input.nextLine();
+//			}
+//		}
+//	}
 	public static void drawCard() // method draws another card into a hand (arraylist)
 	{
 		boolean cont = true;
