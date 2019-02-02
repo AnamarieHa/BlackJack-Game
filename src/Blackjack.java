@@ -1,6 +1,6 @@
 /* Class simulates a game of Black Jack between the computer and the user
-* The computer acts as the dealer
-*/
+ * The computer acts as the dealer
+ */
 import java.util.*;
 public class Blackjack 
 {
@@ -13,252 +13,143 @@ public class Blackjack
 	public static void main(String[] args)
 	{
 		player = new Player();
-		boolean contPlay = true;
+		boolean contPlay = true; // whether the player wants to continue playing
 		Scanner input = new Scanner(System.in);
 		do{
-			double bet = 0;
+			double bet = player.bet();
 			double winnings = 0;
-//			if (player.getBalance() > 0)
-//			{
-				boolean contIn = true;
-//				while(contIn)
-//				{
-//					try // try catch clause prevents non-numerical or non-positive inputs
-//					{
-//						print("Enter the amount you want to bet: ");
-//						bet = input.nextDouble();
-//						if(bet <= 0) // Prevent non-positive numbers
-//							println("You must bet something.");
-//						else if(bet > player.getBalance())
-//						{
-//							player.askDeposit();
-//						}
-//						else
-//							contIn = false;
-//					}
-//					catch(InputMismatchException ex) //Prevent non-numerical inputs
-//					{
-//						println("Enter a valid amount.");
-//						input.next();
-//					}
-//				}
-				contPlay = player.bet(bet);
-				playerCards = new ArrayList<Card>(); // holds the player's hands
-				dealerCards = new ArrayList<Card>(); // holds the dealer's hand
-				allCards = new ArrayList<Integer>(); // keeps track of all cards in play
-				for(int i = 0; i < 4; i++) // loop draw first cards 
+			//contPlay = true;
+			playerCards = new ArrayList<Card>(); // holds the player's hands
+			dealerCards = new ArrayList<Card>(); // holds the dealer's hand
+			allCards = new ArrayList<Integer>(); // keeps track of all cards in play
+			for(int i = 0; i < 4; i++) // loop draw first cards 
+			{
+				drawCard();
+				if(i<2) //Draw 2 cards for the player
+					playerCards.add(new Card(allCards.get(i)));
+				else //Draw 2 cards for the dealer
+					dealerCards.add(new Card(allCards.get(i)));
+
+			}
+			playerTotal = calculateTotal(playerCards);
+			dealerTotal = calculateTotal(dealerCards);
+			println("You have the " + playerCards.get(0) + " and the " + playerCards.get(1));
+			println("Your total is " + playerTotal);
+			println("Dealer has the " + dealerCards.get(0));
+			String reply = "stand"; 
+			if(playerTotal < 21) 
+			{
+				println("Would you like to Hit, Stand, or Split? ");
+				reply = input.nextLine().toLowerCase();
+				while(!(reply.equals("hit") || reply.equals("split") || reply.equals("stand"))) //Input validation
 				{
-					drawCard();
-					if(i<2) //Draw 2 cards for the player
-						playerCards.add(new Card(allCards.get(i)));
-					else //Draw 2 cards for the dealer
-						dealerCards.add(new Card(allCards.get(i)));
-					
-				}
-				playerTotal = calculateTotal(playerCards);
-				dealerTotal = calculateTotal(dealerCards);
-				println("You have the " + playerCards.get(0) + " and the " + playerCards.get(1));
-				println("Your total is " + playerTotal);
-				println("Dealer has the " + dealerCards.get(0));
-				String reply = "stand"; 
-				if(playerTotal < 21) 
-				{
-					println("Would you like to Hit, Stand, or Split? ");
+					println("Please enter Hit, Stand, or Split.");
 					reply = input.nextLine().toLowerCase();
-					while(!(reply.equals("hit") || reply.equals("split") || reply.equals("stand"))) //Input validation
-					{
-						println("Please enter Hit, Stand, or Split.");
-						reply = input.nextLine().toLowerCase();
-					}
-					while(reply.equals("hit"))
-					{	
-						reply = playerHit(playerCards);
-					}
-					if(reply.equals("split"))
-					{
-						playerTotal = 0;
-						int hand1Total = split(0);
-						int hand2Total = split(1);
-						if(hand1Total > 21 && hand2Total >21)
-						{
-							println("Dealer stands with " + dealerCards.get(0) + ", " + dealerCards.get(1));
-						}
-						else
-						{
-							dealer();
-							if((dealerTotal < 18) && ((hand1Total <= 21 && hand1Total >= 16) || (hand2Total <= 21 && hand2Total >= 16)))
-							{
-								drawCard();
-								dealerCards.add(new Card(allCards.get(allCards.size()-1)));
-								println("Dealer hit and got the " + dealerCards.get(dealerCards.size()-1));
-								dealerTotal = calculateTotal(dealerCards);
-							}
-							println("Dealer stands with " + dealerCards);
-						}
-						println("Dealer has a total of " + dealerTotal);
-						if(hand1Total <= 21 && (hand1Total > dealerTotal  || dealerTotal > 21))
-						{
-							winnings += bet*2;
-							println("Hand 1 wins. You get $" + winnings);
-						}
-						else if(hand1Total == dealerTotal)
-						{
-							winnings += bet/2;
-							println("Hand 1 and the dealer tie. You get %" + winnings);
-						}
-						else
-							println("Hand 1 loses.");
-						if(hand2Total <= 21 && (hand2Total > dealerTotal  || dealerTotal > 21))
-						{
-							winnings += bet*2;
-							println("Hand 2 wins. You get $" + (bet*2));
-						}
-						else if(hand2Total == dealerTotal)
-						{
-							winnings += bet/2;
-							println("Hand 2 and the dealer tie. You get $" + (bet/2));
-						}
-						else
-							println("Hand 2 loses.");
-					}
 				}
-				if(reply.equals("stand"))
+				while(reply.equals("hit"))
+				{	
+					reply = playerHit(playerCards);
+				}
+				if(reply.equals("split"))
 				{
-					if(playerTotal > 21)
+					playerTotal = 0;
+					int hand1Total = split(0);
+					int hand2Total = split(1);
+					if(hand1Total > 21 && hand2Total >21)
 					{
 						println("Dealer stands with " + dealerCards.get(0) + ", " + dealerCards.get(1));
 					}
 					else
 					{
 						dealer();
+						if((dealerTotal < 18) && ((hand1Total <= 21 && hand1Total >= 16) || (hand2Total <= 21 && hand2Total >= 16)))
+						{
+							drawCard();
+							dealerCards.add(new Card(allCards.get(allCards.size()-1)));
+							println("Dealer hit and got the " + dealerCards.get(dealerCards.size()-1));
+							dealerTotal = calculateTotal(dealerCards);
+						}
 						println("Dealer stands with " + dealerCards);
 					}
 					println("Dealer has a total of " + dealerTotal);
-					if(playerTotal <= 21 && (playerTotal > dealerTotal  || dealerTotal > 21))
+					if(hand1Total <= 21 && (hand1Total > dealerTotal  || dealerTotal > 21))
 					{
-						winnings = bet*2;
-						println("You win. You get $" + bet*2);
+						winnings += bet*2;
+						println("Hand 1 wins. You get $" + winnings);
 					}
-					else if(playerTotal == dealerTotal)
+					else if(hand1Total == dealerTotal)
 					{
-						winnings = bet/2;
-						println("You and the dealer tie. You get $" + bet/2);
+						winnings += bet/2;
+						println("Hand 1 and the dealer tie. You get %" + winnings);
 					}
 					else
-						println("Dealer wins.");
+						println("Hand 1 loses.");
+					if(hand2Total <= 21 && (hand2Total > dealerTotal  || dealerTotal > 21))
+					{
+						winnings += bet*2;
+						println("Hand 2 wins. You get $" + (bet*2));
+					}
+					else if(hand2Total == dealerTotal)
+					{
+						winnings += bet/2;
+						println("Hand 2 and the dealer tie. You get $" + (bet/2));
+					}
+					else
+						println("Hand 2 loses.");
 				}
-				player.win(winnings);
-				contIn = true;
-				println("Would you like to play again? (yes/no)");
-				String answer = input.nextLine().toLowerCase();
-				while(contIn)
+			}
+			if(reply.equals("stand"))
+			{
+				if(playerTotal > 21)
 				{
-					if(answer.equals("yes"))
-					{
-						contIn = false;
-						contPlay = true;
-					}
-					else if(answer.equals("no"))
-					{
-						println("Thank you for playing.");
-						println("You ended with $" + player.getBalance() + " in your account.");
-						contIn = false;
-						contPlay = false;
-					}
-					else
-					{
-						println("Please enter yes or no: ");
-						answer = input.nextLine().toLowerCase();
-					}
+					println("Dealer stands with " + dealerCards.get(0) + ", " + dealerCards.get(1));
 				}
-			}	while(contPlay);
-//			else
-//			{
-//				player.askDeposit();
-//				if(player.getBalance() == 0)
-//				{
-//					println("You have no money. Game over.");
-//					contPlay = false;
-//				}
-//			}
-		//} while(contPlay);
+				else
+				{
+					dealer();
+					println("Dealer stands with " + dealerCards);
+				}
+				println("Dealer has a total of " + dealerTotal);
+				if(playerTotal <= 21 && (playerTotal > dealerTotal  || dealerTotal > 21))
+				{
+					winnings = bet*2;
+					println("You win. You get $" + bet*2);
+				}
+				else if(playerTotal == dealerTotal)
+				{
+					winnings = bet/2;
+					println("You and the dealer tie. You get $" + bet/2);
+				}
+				else
+					println("Dealer wins.");
+			}
+			player.win(winnings);
+			println("Would you like to play again? (yes/no)");
+			String answer = input.nextLine().toLowerCase();
+				if(answer.equals("yes"))
+				{
+					contPlay = true;
+				}
+				else if(answer.equals("no"))
+				{
+//					println("Thank you for playing.");
+//					println("You ended with $" + player.getBalance() + " in your account.");
+					contPlay = false;
+				}
+				else
+				{
+					println("Please enter yes or no: ");
+					answer = input.nextLine().toLowerCase();
+				}
+		}	while(contPlay);
+		if (contPlay == false) 
+		{
+			println("Thank you for playing.");
+			println("You ended with $" + player.getBalance() + " in your account.");
+		}
 		input.close();
 	}
-//	public static double checkBet() {
-//		boolean contIn = true;
-//		while(contIn)
-//		{
-//			try // try catch clause prevents non-numerical or non-positive inputs
-//			{
-//				print("Enter the amount you want to bet: ");
-//				bet = input.nextDouble();
-//				if(bet <= 0) // Prevent non-positive numbers
-//					println("You must bet something.");
-//				else if(bet > player.getBalance())
-//				{
-//					checkAccount();
-//				}
-//				else
-//					contIn = false;
-//			}
-//			catch(InputMismatchException ex) //Prevent non-numerical inputs
-//			{
-//				println("Enter a valid amount.");
-//				input.next();
-//			}
-//		}
-//	}
-//	public static void askDeposit() /* method asks the player if he/she wants to deposit more money, deposits the amount the user input,
-//	or terminates the game depending on the player's choice*/
-//	{
-//		Scanner input = new Scanner(System.in);
-//		println("Not enough money in your account. Deposit more? (yes/no)");
-//		String ans = "";
-//		boolean accountCheck = true;
-//		while(accountCheck)
-//		{
-//			println("Please enter Yes or No: ");
-//			ans = input.nextLine();
-//			ans = ans.toLowerCase();
-//			if(ans.equals("yes"))
-//			{
-//				accountCheck = false;
-//			}
-//			else if(ans.equals("no"))
-//			{
-//				accountCheck = false;
-//			}
-//		}
-//		accountCheck = true;
-//		while(accountCheck)
-//		{
-//			try {
-//				
-//				if(ans.equals("yes"))
-//				{
-//					println("Deposit how much?");
-//					double amount = input.nextDouble();
-//					while(amount <= 0) {
-//						println("You must deposit something.");
-//						amount = input.nextDouble();
-//					}
-//					player.win(amount);
-//					accountCheck = false;
-//				}
-//				else if(ans.equals("no"))
-//				{
-//					print("OK. ");
-//					accountCheck = false;
-//				}
-//				
-//			}
-//			catch(InputMismatchException ex)
-//			{
-//				println("Enter a valid amount");
-//				input.nextLine();
-//			}
-//		}
-//	}
+
 	public static void drawCard() // method draws another card into a hand (arraylist)
 	{
 		boolean cont = true;
@@ -342,7 +233,7 @@ public class Blackjack
 		}
 		return calculateTotal(hand);
 	}
-	
+
 	public static void dealer() // method determines and displays what cards the dealer's hand holds and calculates its total
 	{
 		while(dealerTotal <= 14)
@@ -360,6 +251,7 @@ public class Blackjack
 			dealerTotal = calculateTotal(dealerCards);
 		}
 	}
+
 	public static void print(String str)
 	{
 		System.out.print(str);

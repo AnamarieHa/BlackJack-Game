@@ -46,41 +46,49 @@ public class Player
 		}
 		account = new Account(acct, amount);
 	}
-	public boolean bet(double amt) // method places a bet on the balance by withdrawing the given amount & call askDeposit if bet > balance
+	public double bet() // method places a bet on the balance by withdrawing the given amount & call askDeposit if bet > balance
 	{
 		boolean contIn = true;
 		double bet = 0;
-		Scanner input = new Scanner(System.in);
-		while(contIn)
+		if (account.getBalance() == 0)
 		{
-			try // try catch clause prevents non-numerical or non-positive inputs
+			askDeposit();
+		}
+		else 
+		{
+			Scanner input = new Scanner(System.in);
+			while(contIn)
 			{
-				print("Enter the amount you want to bet: ");
-				bet = input.nextDouble();
-				if(bet <= 0) // Prevent non-positive numbers
+				try // try catch clause prevents non-numerical or non-positive inputs
 				{
-					println("You must bet something.");
+					print("Enter the amount you want to bet: ");
+					bet = input.nextDouble();
+					if(bet <= 0) // Prevent non-positive numbers
+					{
+						println("You must bet something.");
+						contIn = true;
+						//return true;
+					}
+					else if(bet > account.getBalance())
+					{
+						askDeposit();
+						contIn = true;
+						//return false;
+					}
+					contIn = false; 
+					//return false;
+				}
+				catch(InputMismatchException ex) //Prevent non-numerical inputs
+				{
+					println("Please enter a valid amount.");
+					input.next();
 					contIn = true;
-					return true;
 				}
-				else if(bet > getBalance())
-				{
-					contIn = askDeposit();
-					return false;
-				}
-				else
-					contIn = false;
-					return false;
-			}
-			catch(InputMismatchException ex) //Prevent non-numerical inputs
-			{
-				println("Enter a valid amount.");
-				input.next();
 			}
 		}
-
-		this.account.withdraw(amt);
-		return false;
+		this.account.withdraw(bet);
+		return bet;
+		//return false;
 	}
 	public void win(double amt) // method deposits the given amount when a player wins
 	{
@@ -98,61 +106,67 @@ public class Player
 	{
 		System.out.println(str);
 	}
-	public boolean askDeposit() /* method asks the player if he/she wants to deposit more money, deposits the amount the user input,
+	public void askDeposit() /* method asks the player if he/she wants to deposit more money, deposits the amount the user input,
 	or terminates the game depending on the player's choice*/
 	{
 		Scanner input = new Scanner(System.in);
 		println("Not enough money in your account. Deposit more? (yes/no)");
 		String ans = "";
-		//boolean accountCheck = true;
-		//		while(accountCheck)
-		//		{
-		//			println("Please enter Yes or No: ");
-		//			ans = input.nextLine();
-		//			ans = ans.toLowerCase();
-		//			if(ans.equals("yes"))
-		//			{
-		//				accountCheck = false;
-		//			}
-		//			else if(ans.equals("no"))
-		//			{
-		//				accountCheck = false;
-		//			}
-		//		}
-		//		accountCheck = true;
-		//while(accountCheck)
-		//{
-		try {
-			println("Please enter Yes or No: ");
-			ans = input.nextLine();
-			ans = ans.toLowerCase();
-			if(ans.equals("yes"))
-			{
-				println("Deposit how much?");
-				double amount = input.nextDouble();
-				while(amount <= 0) {
-					println("You must deposit something.");
-					amount = input.nextDouble();
-				}
-				this.win(amount);
-				return true;
-				//accountCheck = false;
-			}
-			else if(ans.equals("no"))
-			{
-				print("OK. ");
-				return false;
-				//accountCheck = false;
-			}
-			return false;
-
-		}
-		catch(InputMismatchException ex)
+		boolean accountCheck = true;
+//		while(accountCheck)
+//		{
+//			println("Please enter Yes or No: ");
+//			ans = input.nextLine();
+//			ans = ans.toLowerCase();
+//			if(ans.equals("yes"))
+//			{
+//				accountCheck = false;
+//			}
+//			else if(ans.equals("no"))
+//			{
+//				accountCheck = false;
+//			}
+//		}
+//		accountCheck = true;
+		while(accountCheck)
 		{
-			println("Enter a valid amount");
-			input.nextLine();
+			try 
+			{
+				//println("Please enter Yes or No: ");
+				ans = input.nextLine();
+				ans = ans.toLowerCase();
+				if(ans.equals("yes"))
+				{
+					println("Deposit how much?");
+					double amount = input.nextDouble();
+					while(amount <= 0) {
+						println("You must deposit something.");
+						amount = input.nextDouble();
+					}
+					this.win(amount);
+					bet();
+					//return true;
+					//accountCheck = false;
+				}
+				else if(ans.equals("no"))
+				{
+					print("Thanks for playing. ");
+					//return false;
+					//accountCheck = false;
+				}
+				//return false;
+
+			}
+			catch(InputMismatchException ex)
+			{
+				println("Enter a valid amount");
+				input.nextLine();
+			}
+
+			//return false;
 		}
-		//}
-		return false;
+		input.close();
+		//return accountCheck;
+
 	}
 }
