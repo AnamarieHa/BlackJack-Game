@@ -48,7 +48,7 @@ public class Player
 	}
 	public double bet() // method places a bet on the balance by withdrawing the given amount & call askDeposit if bet > balance
 	{
-		boolean contIn = true;
+		//boolean contIn = true;
 		double bet = 0;
 		if (account.getBalance() == 0)
 		{
@@ -57,34 +57,37 @@ public class Player
 		else 
 		{
 			Scanner input = new Scanner(System.in);
-			while(contIn)
+			//			while(contIn)
+			//			{
+			try // try catch clause prevents non-numerical or non-positive inputs
 			{
-				try // try catch clause prevents non-numerical or non-positive inputs
+				print("Enter the amount you want to bet: ");
+				bet = input.nextDouble();
+				if(bet <= 0) // Prevent non-positive numbers
 				{
-					print("Enter the amount you want to bet: ");
-					bet = input.nextDouble();
-					if(bet <= 0) // Prevent non-positive numbers
-					{
-						println("You must bet something.");
-						contIn = true;
-						//return true;
-					}
-					else if(bet > account.getBalance())
-					{
-						askDeposit();
-						contIn = true;
-						//return false;
-					}
-					contIn = false; 
+					println("You must bet something.");
+					bet();
+					//contIn = true;
+					//return true;
+				}
+				else if(bet > account.getBalance())
+				{
+					askDeposit();
+					bet();
+					//contIn = true;
 					//return false;
 				}
-				catch(InputMismatchException ex) //Prevent non-numerical inputs
-				{
-					println("Please enter a valid amount.");
-					input.next();
-					contIn = true;
-				}
+				//contIn = false; 
+				//return false;
 			}
+			catch(InputMismatchException ex) //Prevent non-numerical inputs
+			{
+				println("Please enter a valid amount.");
+				input.next();
+				bet();
+				//contIn = true;
+			}
+			//}
 		}
 		this.account.withdraw(bet);
 		return bet;
@@ -113,21 +116,6 @@ public class Player
 		println("Not enough money in your account. Deposit more? (yes/no)");
 		String ans = "";
 		boolean accountCheck = true;
-//		while(accountCheck)
-//		{
-//			println("Please enter Yes or No: ");
-//			ans = input.nextLine();
-//			ans = ans.toLowerCase();
-//			if(ans.equals("yes"))
-//			{
-//				accountCheck = false;
-//			}
-//			else if(ans.equals("no"))
-//			{
-//				accountCheck = false;
-//			}
-//		}
-//		accountCheck = true;
 		while(accountCheck)
 		{
 			try 
@@ -144,7 +132,8 @@ public class Player
 						amount = input.nextDouble();
 					}
 					this.win(amount);
-					bet();
+
+					//this.bet();
 					//return true;
 					//accountCheck = false;
 				}

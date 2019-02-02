@@ -13,135 +13,142 @@ public class Blackjack
 	public static void main(String[] args)
 	{
 		player = new Player();
+		playBlackjack();
+	}
+	public static void playBlackjack() 
+	{
 		boolean contPlay = true; // whether the player wants to continue playing
 		Scanner input = new Scanner(System.in);
-		do{
-			double bet = player.bet();
-			double winnings = 0;
-			//contPlay = true;
-			playerCards = new ArrayList<Card>(); // holds the player's hands
-			dealerCards = new ArrayList<Card>(); // holds the dealer's hand
-			allCards = new ArrayList<Integer>(); // keeps track of all cards in play
-			for(int i = 0; i < 4; i++) // loop draw first cards 
-			{
-				drawCard();
-				if(i<2) //Draw 2 cards for the player
-					playerCards.add(new Card(allCards.get(i)));
-				else //Draw 2 cards for the dealer
-					dealerCards.add(new Card(allCards.get(i)));
+		double bet = player.bet();
+		double winnings = 0;
+		//contPlay = true;
+		playerCards = new ArrayList<Card>(); // holds the player's hands
+		dealerCards = new ArrayList<Card>(); // holds the dealer's hand
+		allCards = new ArrayList<Integer>(); // keeps track of all cards in play
+		for(int i = 0; i < 4; i++) // loop draw first cards 
+		{
+			drawCard();
+			if(i<2) //Draw 2 cards for the player
+				playerCards.add(new Card(allCards.get(i)));
+			else //Draw 2 cards for the dealer
+				dealerCards.add(new Card(allCards.get(i)));
 
-			}
-			playerTotal = calculateTotal(playerCards);
-			dealerTotal = calculateTotal(dealerCards);
-			println("You have the " + playerCards.get(0) + " and the " + playerCards.get(1));
-			println("Your total is " + playerTotal);
-			println("Dealer has the " + dealerCards.get(0));
-			String reply = "stand"; 
-			if(playerTotal < 21) 
+		}
+		playerTotal = calculateTotal(playerCards);
+		dealerTotal = calculateTotal(dealerCards);
+		println("You have the " + playerCards.get(0) + " and the " + playerCards.get(1));
+		println("Your total is " + playerTotal);
+		println("Dealer has the " + dealerCards.get(0));
+		String reply = "stand"; 
+		if(playerTotal < 21) 
+		{
+			println("Would you like to Hit, Stand, or Split? ");
+			reply = input.nextLine().toLowerCase();
+			while(!(reply.equals("hit") || reply.equals("split") || reply.equals("stand"))) //Input validation
 			{
-				println("Would you like to Hit, Stand, or Split? ");
+				println("Please enter Hit, Stand, or Split.");
 				reply = input.nextLine().toLowerCase();
-				while(!(reply.equals("hit") || reply.equals("split") || reply.equals("stand"))) //Input validation
-				{
-					println("Please enter Hit, Stand, or Split.");
-					reply = input.nextLine().toLowerCase();
-				}
-				while(reply.equals("hit"))
-				{	
-					reply = playerHit(playerCards);
-				}
-				if(reply.equals("split"))
-				{
-					playerTotal = 0;
-					int hand1Total = split(0);
-					int hand2Total = split(1);
-					if(hand1Total > 21 && hand2Total >21)
-					{
-						println("Dealer stands with " + dealerCards.get(0) + ", " + dealerCards.get(1));
-					}
-					else
-					{
-						dealer();
-						if((dealerTotal < 18) && ((hand1Total <= 21 && hand1Total >= 16) || (hand2Total <= 21 && hand2Total >= 16)))
-						{
-							drawCard();
-							dealerCards.add(new Card(allCards.get(allCards.size()-1)));
-							println("Dealer hit and got the " + dealerCards.get(dealerCards.size()-1));
-							dealerTotal = calculateTotal(dealerCards);
-						}
-						println("Dealer stands with " + dealerCards);
-					}
-					println("Dealer has a total of " + dealerTotal);
-					if(hand1Total <= 21 && (hand1Total > dealerTotal  || dealerTotal > 21))
-					{
-						winnings += bet*2;
-						println("Hand 1 wins. You get $" + winnings);
-					}
-					else if(hand1Total == dealerTotal)
-					{
-						winnings += bet/2;
-						println("Hand 1 and the dealer tie. You get %" + winnings);
-					}
-					else
-						println("Hand 1 loses.");
-					if(hand2Total <= 21 && (hand2Total > dealerTotal  || dealerTotal > 21))
-					{
-						winnings += bet*2;
-						println("Hand 2 wins. You get $" + (bet*2));
-					}
-					else if(hand2Total == dealerTotal)
-					{
-						winnings += bet/2;
-						println("Hand 2 and the dealer tie. You get $" + (bet/2));
-					}
-					else
-						println("Hand 2 loses.");
-				}
 			}
-			if(reply.equals("stand"))
+			while(reply.equals("hit"))
+			{	
+				reply = playerHit(playerCards);
+			}
+			if(reply.equals("split"))
 			{
-				if(playerTotal > 21)
+				playerTotal = 0;
+				int hand1Total = split(0);
+				int hand2Total = split(1);
+				if(hand1Total > 21 && hand2Total >21)
 				{
 					println("Dealer stands with " + dealerCards.get(0) + ", " + dealerCards.get(1));
 				}
 				else
 				{
 					dealer();
+					if((dealerTotal < 18) && ((hand1Total <= 21 && hand1Total >= 16) || (hand2Total <= 21 && hand2Total >= 16)))
+					{
+						drawCard();
+						dealerCards.add(new Card(allCards.get(allCards.size()-1)));
+						println("Dealer hit and got the " + dealerCards.get(dealerCards.size()-1));
+						dealerTotal = calculateTotal(dealerCards);
+					}
 					println("Dealer stands with " + dealerCards);
 				}
 				println("Dealer has a total of " + dealerTotal);
-				if(playerTotal <= 21 && (playerTotal > dealerTotal  || dealerTotal > 21))
+				if(hand1Total <= 21 && (hand1Total > dealerTotal  || dealerTotal > 21))
 				{
-					winnings = bet*2;
-					println("You win. You get $" + bet*2);
+					winnings += bet*2;
+					println("Hand 1 wins. You get $" + winnings);
 				}
-				else if(playerTotal == dealerTotal)
+				else if(hand1Total == dealerTotal)
 				{
-					winnings = bet/2;
-					println("You and the dealer tie. You get $" + bet/2);
+					winnings += bet/2;
+					println("Hand 1 and the dealer tie. You get %" + winnings);
 				}
 				else
-					println("Dealer wins.");
+					println("Hand 1 loses.");
+				if(hand2Total <= 21 && (hand2Total > dealerTotal  || dealerTotal > 21))
+				{
+					winnings += bet*2;
+					println("Hand 2 wins. You get $" + (bet*2));
+				}
+				else if(hand2Total == dealerTotal)
+				{
+					winnings += bet/2;
+					println("Hand 2 and the dealer tie. You get $" + (bet/2));
+				}
+				else
+					println("Hand 2 loses.");
 			}
-			player.win(winnings);
-			println("Would you like to play again? (yes/no)");
-			String answer = input.nextLine().toLowerCase();
-				if(answer.equals("yes"))
-				{
-					contPlay = true;
-				}
-				else if(answer.equals("no"))
-				{
-//					println("Thank you for playing.");
-//					println("You ended with $" + player.getBalance() + " in your account.");
-					contPlay = false;
-				}
-				else
-				{
-					println("Please enter yes or no: ");
-					answer = input.nextLine().toLowerCase();
-				}
-		}	while(contPlay);
+		}
+		if(reply.equals("stand"))
+		{
+			if(playerTotal > 21)
+			{
+				println("Dealer stands with " + dealerCards.get(0) + ", " + dealerCards.get(1));
+			}
+			else
+			{
+				dealer();
+				println("Dealer stands with " + dealerCards);
+			}
+			println("Dealer has a total of " + dealerTotal);
+			if(playerTotal <= 21 && (playerTotal > dealerTotal  || dealerTotal > 21))
+			{
+				winnings = bet*2;
+				println("You win. You get $" + bet*2);
+				player.win(bet*2);
+				println("Your balance is now " + String.valueOf(player.getBalance()));
+			}
+			else if(playerTotal == dealerTotal)
+			{
+				winnings = bet/2;
+				println("You and the dealer tie.");
+				player.win(bet);
+				println("Your balance is now " + String.valueOf(player.getBalance()));
+			}
+			else 
+			{
+				println("Dealer wins.");
+				println("Your balance is now " + String.valueOf(player.getBalance()));
+		
+			}
+		}
+		player.win(winnings);
+		println("Would you like to play again? (yes/no)");
+		String answer = input.nextLine().toLowerCase();
+		while (answer.equals("yes") || answer.equals("no")) {
+			if(answer.equals("yes"))
+			{
+				
+				playBlackjack();
+			}
+			else if(answer.equals("no"))
+			{
+				contPlay = false;
+			}
+
+		}
 		if (contPlay == false) 
 		{
 			println("Thank you for playing.");
@@ -149,7 +156,6 @@ public class Blackjack
 		}
 		input.close();
 	}
-
 	public static void drawCard() // method draws another card into a hand (arraylist)
 	{
 		boolean cont = true;
