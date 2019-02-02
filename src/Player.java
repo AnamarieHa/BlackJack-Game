@@ -53,6 +53,7 @@ public class Player
 		if (account.getBalance() == 0)
 		{
 			askDeposit();
+			return bet();
 		}
 		else 
 		{
@@ -66,14 +67,14 @@ public class Player
 				if(bet <= 0) // Prevent non-positive numbers
 				{
 					println("You must bet something.");
-					bet();
+					return bet();
 					//contIn = true;
 					//return true;
 				}
 				else if(bet > account.getBalance())
 				{
 					askDeposit();
-					bet();
+					return bet();
 					//contIn = true;
 					//return false;
 				}
@@ -84,7 +85,7 @@ public class Player
 			{
 				println("Please enter a valid amount.");
 				input.next();
-				bet();
+				return bet();
 				//contIn = true;
 			}
 			//}

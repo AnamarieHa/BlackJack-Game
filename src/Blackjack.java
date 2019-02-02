@@ -44,7 +44,7 @@ public class Blackjack
 		{
 			println("Would you like to Hit, Stand, or Split? ");
 			reply = input.nextLine().toLowerCase();
-			while(!(reply.equals("hit") || reply.equals("split") || reply.equals("stand"))) //Input validation
+			while(!(reply.equals("hit") || !reply.equals("split") || !reply.equals("stand"))) //Input validation
 			{
 				println("Please enter Hit, Stand, or Split.");
 				reply = input.nextLine().toLowerCase();
@@ -77,28 +77,38 @@ public class Blackjack
 				println("Dealer has a total of " + dealerTotal);
 				if(hand1Total <= 21 && (hand1Total > dealerTotal  || dealerTotal > 21))
 				{
-					winnings += bet*2;
-					println("Hand 1 wins. You get $" + winnings);
+					println("Hand 1 won. You won $" + bet);
+					player.win(bet);
+					println("Your balance is now " + String.valueOf(player.getBalance()));
 				}
 				else if(hand1Total == dealerTotal)
 				{
-					winnings += bet/2;
-					println("Hand 1 and the dealer tie. You get %" + winnings);
+					println("Hand 1 and the dealer tie.");
+					println("Your balance is now " + String.valueOf(player.getBalance()));
 				}
 				else
-					println("Hand 1 loses.");
+				{
+					println("Hand 1 lost.");
+					player.win(-bet);
+					println("Your balance is now " + String.valueOf(player.getBalance()));
+				}
 				if(hand2Total <= 21 && (hand2Total > dealerTotal  || dealerTotal > 21))
 				{
-					winnings += bet*2;
-					println("Hand 2 wins. You get $" + (bet*2));
+					println("Hand 2 won. You won $" + (bet));
+					player.win(bet);
+					println("Your balance is now " + String.valueOf(player.getBalance()));
 				}
 				else if(hand2Total == dealerTotal)
 				{
-					winnings += bet/2;
-					println("Hand 2 and the dealer tie. You get $" + (bet/2));
+					println("Hand 2 and the dealer tie." + (bet/2));
+					println("Your balance is now " + String.valueOf(player.getBalance()));
 				}
 				else
-					println("Hand 2 loses.");
+				{
+					println("Hand 2 lost.");
+					player.win(-bet);
+					println("Your balance is now " + String.valueOf(player.getBalance()));
+				}
 			}
 		}
 		if(reply.equals("stand"))
@@ -115,23 +125,21 @@ public class Blackjack
 			println("Dealer has a total of " + dealerTotal);
 			if(playerTotal <= 21 && (playerTotal > dealerTotal  || dealerTotal > 21))
 			{
-				winnings = bet*2;
-				println("You won. You get $" + bet);
+				println("You won $" + bet);
 				player.win(bet*2);
 				println("Your balance is now " + String.valueOf(player.getBalance()));
 			}
 			else if(playerTotal == dealerTotal)
 			{
-				winnings = bet/2;
 				println("You and the dealer tie.");
 				player.win(bet);
 				println("Your balance is now " + String.valueOf(player.getBalance()));
 			}
 			else 
 			{
-				println("Dealer wins.");
+				println("Dealer won, you lost $" + bet);
 				println("Your balance is now " + String.valueOf(player.getBalance()));
-		
+
 			}
 		}
 		player.win(winnings);
@@ -140,19 +148,13 @@ public class Blackjack
 		while (answer.equals("yes") || answer.equals("no")) {
 			if(answer.equals("yes"))
 			{
-				
 				playBlackjack();
 			}
 			else if(answer.equals("no"))
 			{
-				contPlay = false;
+				println("Thank you for playing.");
+				println("You ended with $" + player.getBalance() + " in your account.");
 			}
-
-		}
-		if (contPlay == false) 
-		{
-			println("Thank you for playing.");
-			println("You ended with $" + player.getBalance() + " in your account.");
 		}
 		input.close();
 	}
