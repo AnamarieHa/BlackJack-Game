@@ -116,7 +116,7 @@ public class Blackjack
 			if(playerTotal <= 21 && (playerTotal > dealerTotal  || dealerTotal > 21))
 			{
 				winnings = bet*2;
-				println("You win. You get $" + bet*2);
+				println("You won. You get $" + bet);
 				player.win(bet*2);
 				println("Your balance is now " + String.valueOf(player.getBalance()));
 			}
